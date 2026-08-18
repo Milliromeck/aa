@@ -1247,9 +1247,9 @@
         </div>
     </div>
 
-    <!-- ===== AUDIO ===== -->
+    <!-- ===== MUSIC MP3 ===== -->
     <audio id="bgMusic" loop preload="auto">
-        <source src="https://ia800304.us.archive.org/35/items/love-in-the-dark-jay-rob-covers/Love%20In%20The%20Dark%20-%20Jay%20Rob%20Covers.mp3" type="audio/mpeg">
+        <source src="katja-sambuka-pati.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -1380,6 +1380,17 @@
                 musicBtn.querySelector('.music-label').textContent = 'Музыка играет';
             }).catch(err => {
                 console.log('Автозапуск заблокирован браузером, ждём клика');
+                // Пробуем ещё раз при клике на кнопку
+                musicBtn.addEventListener('click', function forcePlay() {
+                    if (!musicStarted) {
+                        audio.play();
+                        musicStarted = true;
+                        musicPlaying = true;
+                        musicBtn.classList.add('playing');
+                        musicBtn.querySelector('.music-label').textContent = 'Музыка играет';
+                    }
+                    musicBtn.removeEventListener('click', forcePlay);
+                });
             });
         }
 
