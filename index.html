@@ -1247,6 +1247,11 @@
         </div>
     </div>
 
+    <!-- ===== AUDIO ===== -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://ia800304.us.archive.org/35/items/love-in-the-dark-jay-rob-covers/Love%20In%20The%20Dark%20-%20Jay%20Rob%20Covers.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // ===== PROGRESS BAR =====
         const progressBar = document.getElementById('progressBar');
@@ -1344,6 +1349,11 @@
             this.classList.add('open');
             envelopeSection.classList.add('opening');
 
+            // Запускаем музыку через 500ms
+            setTimeout(() => {
+                startMusic();
+            }, 500);
+
             setTimeout(() => {
                 envelopeSection.style.display = 'none';
                 invitationCard.classList.add('visible');
@@ -1352,6 +1362,45 @@
                 setTimeout(() => rsvpSection.classList.add('visible'), 650);
                 setTimeout(() => thankyouSection.classList.add('visible'), 800);
             }, 800);
+        });
+
+        // ===== MUSIC =====
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let musicPlaying = false;
+        let musicStarted = false;
+
+        function startMusic() {
+            if (musicStarted) return;
+            musicStarted = true;
+            audio.volume = 0.3;
+            audio.play().then(() => {
+                musicPlaying = true;
+                musicBtn.classList.add('playing');
+                musicBtn.querySelector('.music-label').textContent = 'Музыка играет';
+            }).catch(err => {
+                console.log('Автозапуск заблокирован браузером, ждём клика');
+            });
+        }
+
+        // Кнопка музыки
+        musicBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!musicStarted) {
+                startMusic();
+                return;
+            }
+            if (musicPlaying) {
+                audio.pause();
+                musicPlaying = false;
+                this.classList.remove('playing');
+                this.querySelector('.music-label').textContent = 'Музыка выключена';
+            } else {
+                audio.play();
+                musicPlaying = true;
+                this.classList.add('playing');
+                this.querySelector('.music-label').textContent = 'Музыка играет';
+            }
         });
 
         // ===== ORNAMENTS =====
@@ -1425,15 +1474,6 @@
             setTimeout(() => {
                 thankyouSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 700);
-        });
-
-        // ===== MUSIC =====
-        const musicBtn = document.getElementById('musicBtn');
-        let musicPlaying = false;
-        musicBtn.addEventListener('click', function() {
-            musicPlaying = !musicPlaying;
-            this.classList.toggle('playing');
-            this.querySelector('.music-label').textContent = musicPlaying ? 'Музыка играет' : 'Включить музыку';
         });
     </script>
 </body>
