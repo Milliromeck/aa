@@ -1182,32 +1182,33 @@
             </div>
         </div>
 
+        <!-- ===== RSVP FORM ===== -->
         <div class="rsvp-section" id="rsvpSection">
             <div class="rsvp-title">Подтвердите, пожалуйста,<br>своё присутствие</div>
 
             <form id="rsvpForm">
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Ваше имя" required>
+                    <input type="text" id="guestName" class="form-input" placeholder="Ваше имя" required>
                 </div>
 
                 <div class="radio-group">
                     <label class="radio-option">
-                        <input type="radio" name="attendance" value="yes" checked>
+                        <input type="radio" name="attendance" value="✅ Приду с удовольствием" checked>
                         <span class="radio-custom"></span>
                         <span class="radio-label">С удовольствием приду</span>
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="attendance" value="no">
+                        <input type="radio" name="attendance" value="❌ Не смогу прийти">
                         <span class="radio-custom"></span>
                         <span class="radio-label">К сожалению, не смогу присутствовать</span>
                     </label>
                 </div>
 
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Комментарий (по желанию)">
+                    <input type="text" id="guestComment" class="form-input" placeholder="Комментарий (по желанию)">
                 </div>
 
-                <button type="submit" class="submit-btn">
+                <button type="submit" class="submit-btn" id="submitBtn">
                     <svg viewBox="0 0 24 24">
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                     </svg>
@@ -1380,17 +1381,6 @@
                 musicBtn.querySelector('.music-label').textContent = 'Музыка играет';
             }).catch(err => {
                 console.log('Автозапуск заблокирован браузером, ждём клика');
-                // Пробуем ещё раз при клике на кнопку
-                musicBtn.addEventListener('click', function forcePlay() {
-                    if (!musicStarted) {
-                        audio.play();
-                        musicStarted = true;
-                        musicPlaying = true;
-                        musicBtn.classList.add('playing');
-                        musicBtn.querySelector('.music-label').textContent = 'Музыка играет';
-                    }
-                    musicBtn.removeEventListener('click', forcePlay);
-                });
             });
         }
 
@@ -1466,26 +1456,81 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // ===== RSVP =====
+        // ===== TELEGRAM RSVP =====
+        const BOT_TOKEN = '8587787083:AAF4RozIZG1S_acsNl414wacuzuldwvznB4';
+        const CHAT_ID = '1080449203';
+
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = this.querySelector('.submit-btn');
-            btn.style.background = '#2a4a3a';
+
+            const name = document.getElementById('guestName').value.trim();
+            const attendance = document.querySelector('input[name="attendance"]:checked');
+            const comment = document.getElementById('guestComment').value.trim();
+            const btn = document.getElementById('submitBtn');
+
+            if (!name) {
+                alert('Пожалуйста, напишите ваше имя.');
+                return;
+            }
+
+            if (!attendance) {
+                alert('Пожалуйста, выберите вариант присутствия.');
+                return;
+            }
+
+            // Блокируем кнопку
+            btn.disabled = true;
             btn.innerHTML = `
-                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold)">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold);animation:spin 1s linear infinite">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <path d="M12 6v6l4 2"/>
                 </svg>
-                Отправлено
+                Отправляется...
             `;
 
-            const rect = btn.getBoundingClientRect();
-            createExplosion(rect.left + rect.width / 2, rect.top, 50);
-            if (!animationId) animateParticles();
+            // Формируем сообщение
+            const message = `📨 *НОВЫЙ ОТВЕТ RSVP*\n\n` +
+                            `👤 *Имя:* ${name}\n` +
+                            `📌 *Статус:* ${attendance.value}\n` +
+                            `💬 *Комментарий:* ${comment || '—'}`;
 
-            setTimeout(() => {
-                thankyouSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 700);
+            // Отправляем в Telegram
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    btn.innerHTML = `
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold)">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                        Отправлено ✅
+                    `;
+                    btn.style.background = '#2a4a3a';
+
+                    // Показываем блок "Спасибо"
+                    setTimeout(() => {
+                        document.getElementById('thankyouSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        document.getElementById('thankyouSection').classList.add('visible');
+                    }, 500);
+                } else {
+                    throw new Error('Ошибка отправки');
+                }
+            })
+            .catch(() => {
+                btn.innerHTML = '❌ Ошибка, попробуйте ещё раз';
+                btn.style.background = '#8b0000';
+                btn.disabled = false;
+            });
         });
     </script>
+
 </body>
 </html>
