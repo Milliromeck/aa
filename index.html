@@ -1447,10 +1447,36 @@
             }
         });
 
-        // ===== MAP TOGGLE =====
+        // ===== MAP TOGGLE (mobile + desktop) =====
         document.getElementById('routeBtn').addEventListener('click', function(e) {
             e.preventDefault();
+            
             const mapContainer = document.getElementById('mapContainer');
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            // Если мобильное устройство — открываем в приложении
+            if (isMobile) {
+                // Координаты Барнхаус «Двина», СНТ Рикасиха
+                const lat = 64.5436;
+                const lng = 40.5482;
+                
+                // Яндекс.Навигатор
+                const yandexUrl = `https://yandex.ru/navi/?whatshere%5Bpoint%5D=${lng}%2C${lat}&whatshere%5Bzoom%5D=17&from=navi`;
+                // Google Карты
+                const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+                
+                // Пробуем открыть Яндекс
+                window.open(yandexUrl, '_blank');
+                
+                // Если не открылось — через 2 секунды Google
+                setTimeout(() => {
+                    window.open(googleUrl, '_blank');
+                }, 2000);
+                
+                return;
+            }
+            
+            // Для компьютера — показываем iframe
             if (mapContainer.classList.contains('open')) {
                 mapContainer.classList.remove('open');
                 this.textContent = '📍 Показать маршрут';
