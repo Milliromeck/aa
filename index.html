@@ -274,7 +274,7 @@
             z-index: 3;
         }
 
-        /* ===== ПОДСКАЗКА ПОД КОНВЕРТОМ (БЛЕКЛАЯ, ЭЛЕГАНТНАЯ) ===== */
+        /* ===== ПОДСКАЗКА ПОД КОНВЕРТОМ (ЧУТЬ ЯРЧЕ) ===== */
         .open-hint {
             margin-top: 28px;
             text-align: center;
@@ -286,7 +286,7 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 16px;
             font-weight: 300;
-            color: rgba(201, 185, 154, 0.25);
+            color: rgba(201, 185, 154, 0.4);
             letter-spacing: 1.5px;
             text-transform: none;
             background: none;
@@ -301,11 +301,11 @@
         }
 
         .open-hint-text span {
-            color: rgba(201, 185, 154, 0.35);
+            color: rgba(201, 185, 154, 0.55);
             font-weight: 400;
             text-decoration: underline;
             text-underline-offset: 3px;
-            text-decoration-color: rgba(201, 185, 154, 0.1);
+            text-decoration-color: rgba(201, 185, 154, 0.15);
             text-shadow: none;
         }
 
@@ -319,15 +319,15 @@
         .open-hint-arrow svg {
             width: 20px;
             height: 20px;
-            stroke: rgba(201, 185, 154, 0.2);
+            stroke: rgba(201, 185, 154, 0.35);
             fill: none;
             stroke-width: 1.5;
             filter: none;
         }
 
         @keyframes hintPulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.9; }
         }
 
         @keyframes hintBounce {
@@ -1072,8 +1072,6 @@
             border: 0;
             pointer-events: auto;
         }
-
-        /* ===== УДАЛЁННЫЙ СТИЛЬ ДЛЯ .closing-final (больше не нужен) ===== */
     </style>
 </head>
 <body>
@@ -1104,7 +1102,7 @@
                 </div>
             </div>
 
-            <!-- БЛЕКЛАЯ ЭЛЕГАНТНАЯ ПОДСКАЗКА -->
+            <!-- БЛЕКЛАЯ ЭЛЕГАНТНАЯ ПОДСКАЗКА (чуть ярче) -->
             <div class="open-hint">
                 <div class="open-hint-text">
                     Нажмите на <span>конверт</span>, чтобы открыть
@@ -1182,8 +1180,6 @@
                 <p class="closing-note">
                     Будем признательны, если вы заранее подтвердите присутствие.
                 </p>
-
-                <!-- ФРАЗА "С нетерпением..." УДАЛЕНА -->
 
                 <div class="ornament-divider" data-animate>
                     <div class="ornament-line"></div>
