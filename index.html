@@ -1227,7 +1227,7 @@
             </div>
             <div class="map-container" id="mapContainer">
                 <iframe 
-                    src="https://yandex.ru/map-widget/v1/?text=Архангельская%20область%2C%20Приморский%20муниципальный%20округ%2C%20Прибрежная%20улица%2C%206&ll=40.547041%2C64.549308&z=17"
+                    src="https://yandex.ru/map-widget/v1/?ll=40.990558%2C64.412883&z=17&l=map"
                     allowfullscreen=""
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
@@ -1471,10 +1471,9 @@
             const mapContainer = document.getElementById('mapContainer');
             const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
             
-            // Координаты места (Архангельская область, Прибрежная ул., 6)
-            const lat = 64.549308;
-            const lng = 40.547041;
-            const address = 'Архангельская область, Приморский муниципальный округ, Прибрежная улица, 6';
+            // ТОЧНЫЕ КООРДИНАТЫ МЕСТА
+            const lat = 64.412883;
+            const lng = 40.990558;
             
             // Для мобильных устройств — открываем в навигаторе
             if (isMobile) {
@@ -1498,10 +1497,10 @@
                 mapContainer.classList.remove('open');
                 this.textContent = '📍 Показать маршрут';
             } else {
-                // Обновляем ссылку в iframe на новую с правильным адресом
+                // Обновляем ссылку в iframe на новые координаты
                 const iframe = mapContainer.querySelector('iframe');
                 if (iframe) {
-                    iframe.src = `https://yandex.ru/map-widget/v1/?text=${encodeURIComponent(address)}&ll=${lng}%2C${lat}&z=17`;
+                    iframe.src = `https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&z=17&l=map`;
                 }
                 mapContainer.classList.add('open');
                 this.textContent = '✕ Закрыть карту';
