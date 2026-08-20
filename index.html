@@ -274,54 +274,7 @@
             z-index: 3;
         }
 
-        /* ===== НАДПИСЬ НА КОНВЕРТЕ ===== */
-        .env-hint-text {
-            position: absolute;
-            bottom: 18%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            color: rgba(201, 185, 154, 0.25);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-align: center;
-            z-index: 10;
-            font-weight: 300;
-            animation: hintPulse 3s ease-in-out infinite;
-            line-height: 1.4;
-            pointer-events: none;
-        }
-
-        .env-hint-arrow {
-            position: absolute;
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 18px;
-            color: rgba(201, 185, 154, 0.15);
-            z-index: 10;
-            animation: hintBounce 2.5s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes hintPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.9; }
-        }
-
-        @keyframes hintBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.3; }
-            50% { transform: translateX(-50%) translateY(6px); opacity: 0.7; }
-        }
-
-        /* Скрываем надпись когда конверт открыт */
-        .envelope-wrapper.open .env-hint-text,
-        .envelope-wrapper.open .env-hint-arrow {
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
+        /* ===== ПОДСКАЗКА ПОД КОНВЕРТОМ ===== */
         .open-hint {
             margin-top: 32px;
             text-align: center;
@@ -331,27 +284,48 @@
 
         .open-hint-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            color: rgba(201, 185, 154, 0.6);
+            font-size: 14px;
+            color: rgba(201, 185, 154, 0.7);
             letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 300;
             animation: hintPulse 3s ease-in-out infinite;
+            background: rgba(15, 25, 35, 0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            display: inline-block;
         }
 
         .open-hint-arrow {
-            margin-top: 8px;
+            margin-top: 12px;
             display: flex;
             justify-content: center;
             animation: hintBounce 2.5s ease-in-out infinite;
         }
 
         .open-hint-arrow svg {
-            width: 18px;
-            height: 18px;
-            stroke: rgba(201, 185, 154, 0.4);
+            width: 24px;
+            height: 24px;
+            stroke: rgba(201, 185, 154, 0.5);
             fill: none;
             stroke-width: 1.5;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes hintBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Скрываем подсказку когда конверт открыт */
+        .envelope-section.opening .open-hint {
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .invitation-card {
@@ -1109,14 +1083,12 @@
                     <div class="env-side env-side-right"></div>
                     <div class="env-bottom"></div>
                     <div class="env-monogram">A <span>&</span> A</div>
-                    <!-- Надпись на конверте -->
-                    <div class="env-hint-text">Нажмите,<br>чтобы открыть</div>
-                    <div class="env-hint-arrow">⌄</div>
                 </div>
             </div>
 
+            <!-- Подсказка под конвертом -->
             <div class="open-hint">
-                <div class="open-hint-text">Откройте приглашение</div>
+                <div class="open-hint-text">Нажмите, чтобы открыть</div>
                 <div class="open-hint-arrow">
                     <svg viewBox="0 0 24 24">
                         <polyline points="6 9 12 15 18 9"></polyline>
