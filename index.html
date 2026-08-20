@@ -1072,6 +1072,28 @@
             border: 0;
             pointer-events: auto;
         }
+
+        /* ===== ССЫЛКА НА КАРТУ ===== */
+        .map-link-wrapper {
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .map-link-wrapper a {
+            color: rgba(201, 185, 154, 0.6);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201, 185, 154, 0.15);
+            padding-bottom: 2px;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .map-link-wrapper a:hover {
+            color: rgba(201, 185, 154, 0.9);
+            border-bottom-color: rgba(201, 185, 154, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1227,11 +1249,17 @@
             </div>
             <div class="map-container" id="mapContainer">
                 <iframe 
-                    src="https://yandex.ru/map-widget/v1/?ll=40.990558%2C64.412883&z=17&l=map"
+                    src="https://yandex.ru/map-widget/v1/?ll=40.175561%2C64.545707&z=16&l=map"
                     allowfullscreen=""
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
+            </div>
+            <!-- ===== ОТДЕЛЬНАЯ ССЫЛКА НА КАРТУ ===== -->
+            <div class="map-link-wrapper">
+                <a href="https://yandex.ru/maps/org/barnkhaus_dvina/230958000443/?ll=40.175561%2C64.545707&z=16" target="_blank">
+                    Открыть в Яндекс.Картах →
+                </a>
             </div>
         </div>
 
@@ -1471,14 +1499,14 @@
             const mapContainer = document.getElementById('mapContainer');
             const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
             
-            // ТОЧНЫЕ КООРДИНАТЫ МЕСТА
-            const lat = 64.412883;
-            const lng = 40.990558;
+            // ТОЧНЫЕ КООРДИНАТЫ МЕСТА (Барнхаус Двина)
+            const lat = 64.545707;
+            const lng = 40.175561;
             
             // Для мобильных устройств — открываем в навигаторе
             if (isMobile) {
                 // Ссылка для Яндекс Навигатора
-                const yandexUrl = `https://yandex.ru/navi/?whatshere%5Bpoint%5D=${lng}%2C${lat}&whatshere%5Bzoom%5D=17&from=navi`;
+                const yandexUrl = `https://yandex.ru/navi/?whatshere%5Bpoint%5D=${lng}%2C${lat}&whatshere%5Bzoom%5D=16&from=navi`;
                 // Ссылка для Google Карт (запасной вариант)
                 const googleUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
                 
@@ -1497,10 +1525,10 @@
                 mapContainer.classList.remove('open');
                 this.textContent = '📍 Показать маршрут';
             } else {
-                // Обновляем ссылку в iframe на новые координаты
+                // Обновляем ссылку в iframe на правильные координаты
                 const iframe = mapContainer.querySelector('iframe');
                 if (iframe) {
-                    iframe.src = `https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&z=17&l=map`;
+                    iframe.src = `https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&z=16&l=map`;
                 }
                 mapContainer.classList.add('open');
                 this.textContent = '✕ Закрыть карту';
