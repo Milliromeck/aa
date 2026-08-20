@@ -1231,9 +1231,18 @@
         <div class="rsvp-section" id="rsvpSection">
             <div class="rsvp-title">Подтвердите, пожалуйста,<br>своё присутствие</div>
 
-            <form id="rsvpForm">
+            <form id="rsvpForm" action="https://formsubmit.co/panev2003@gmail.com" method="POST">
+                <!-- Отключаем капчу -->
+                <input type="hidden" name="_captcha" value="false">
+                
+                <!-- Тема письма -->
+                <input type="hidden" name="_subject" value="Новый ответ RSVP на свадьбу!">
+                
+                <!-- Страница после отправки (остаёмся на той же) -->
+                <input type="hidden" name="_next" value="https://milliromeck.github.io/aa/#thankyouSection">
+                
                 <div class="form-group">
-                    <input type="text" id="guestName" class="form-input" placeholder="Ваше имя" required>
+                    <input type="text" id="guestName" name="name" class="form-input" placeholder="Ваше имя" required>
                 </div>
 
                 <div class="radio-group">
@@ -1250,7 +1259,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="text" id="guestComment" class="form-input" placeholder="Комментарий (по желанию)">
+                    <input type="text" id="guestComment" name="comment" class="form-input" placeholder="Комментарий (по желанию)">
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">
@@ -1543,28 +1552,9 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // ===== TELEGRAM RSVP =====
-        const BOT_TOKEN = '8587787083:AAF4RozIZG1S_acsNl414wacuzuldwvznB4';
-        const CHAT_ID = '-521882260';
-
+        // ===== FORM SUBMIT =====
         document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('guestName').value.trim();
-            const attendance = document.querySelector('input[name="attendance"]:checked');
-            const comment = document.getElementById('guestComment').value.trim();
             const btn = document.getElementById('submitBtn');
-
-            if (!name) {
-                alert('Пожалуйста, напишите ваше имя.');
-                return;
-            }
-
-            if (!attendance) {
-                alert('Пожалуйста, выберите вариант присутствия.');
-                return;
-            }
-
             btn.disabled = true;
             btn.innerHTML = `
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold);animation:spin 1s linear infinite">
@@ -1573,45 +1563,22 @@
                 </svg>
                 Отправляется...
             `;
-
-            const message = `📨 *НОВЫЙ ОТВЕТ RSVP*\n\n` +
-                `👤 *Имя:* ${name}\n` +
-                `📌 *Статус:* ${attendance.value}\n` +
-                `💬 *Комментарий:* ${comment || '—'}`;
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    btn.innerHTML = `
-                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold)">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                        </svg>
-                        Отправлено ✅
-                    `;
-                    btn.style.background = '#2a4a3a';
-
-                    setTimeout(() => {
-                        document.getElementById('thankyouSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        document.getElementById('thankyouSection').classList.add('visible');
-                    }, 500);
-                } else {
-                    throw new Error('Ошибка отправки');
-                }
-            })
-            .catch(() => {
-                btn.innerHTML = '❌ Ошибка, попробуйте ещё раз';
-                btn.style.background = '#8b0000';
-                btn.disabled = false;
-            });
+            
+            // Форма отправится через action, просто показываем анимацию
+            setTimeout(() => {
+                btn.innerHTML = `
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--gold)">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Отправлено ✅
+                `;
+                btn.style.background = '#2a4a3a';
+                
+                setTimeout(() => {
+                    document.getElementById('thankyouSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('thankyouSection').classList.add('visible');
+                }, 500);
+            }, 1500);
         });
     </script>
 
